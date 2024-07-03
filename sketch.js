@@ -13,7 +13,7 @@
 let classifier;
 
 let doc = 600;
-let f = 0.8;
+let f = 0.6;
 
 // A variable to hold the image we want to classify
 let img;
@@ -88,31 +88,26 @@ function draw(){
 }
 
 // A function to run when we get any errors and the results
-function gotResult(error, results) {
+function gotResult(results) {
   
   let offset
 
-  // Display error in the console
-  if (error) {
-    console.error(error);
+  // The results are in an array ordered by confidence.
+  console.log(results);
+  
+  if (checkbox.checked()) {
+    txt = results[0].label+'\n'+results[1].label+'\n'+results[2].label
+    offset = 100
   } else {
-    // The results are in an array ordered by confidence.
-    // console.log(results);
-    
-    if (checkbox.checked()) {
-      txt = results[0].label+'\n'+results[1].label+'\n'+results[2].label
-      offset = 100
-    } else {
-      txt = results[0].label
-      offset = 20
-    }
-
-    fill("#6200ff");
-    noStroke();
-    textSize(32);
-    text(txt,20, doc-offset);
-    
+    txt = results[0].label
+    offset = 20
   }
+
+  fill("#6200ff");
+  noStroke();
+  textSize(32);
+  text(txt,20, doc-offset);
+    
 }
 
 // Random drawing functions
