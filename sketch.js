@@ -2,11 +2,11 @@
 // MOBILENET2GIF VERSION
 // Gaëtan Robillard
 // ---------------------------------------------------------------------------------------
-// 1. Au choix :
-// Créer un nouveau dessin aléatoire pour obfusquer la reconnaissance d'image
-// ou
-// Insérer une séquence d'images ou input vidéo pour explorer l'espace sémantique du modèle
-// 2. Exporter une séquence gif avec différentes images obfusquées puis labelisées
+// 1. Choose one of the following:
+//   a. Create a new random drawing to obfuscate image recognition
+//   b. Insert a sequence of images or a video input to explore the model's semantic space
+// 2. Export a GIF sequence with various obfuscated and then labeled images
+// 3. Post your GIF on the class network (if there is one)
 // ---------------------------------------------------------------------------------------
 
 // Initialize the Image Classifier method with MobileNet. A callback needs to be passed.
