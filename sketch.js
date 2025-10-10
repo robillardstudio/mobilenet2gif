@@ -1,6 +1,7 @@
 // MACHINE UNLEARNING (workshop)
 // MOBILENET2GIF VERSION
 // Gaëtan Robillard
+// Updated 10/10/2025
 // ---------------------------------------------------------------------------------------
 // 1. Choose one of the following:
 //   a. Create a new random drawing to obfuscate image recognition
