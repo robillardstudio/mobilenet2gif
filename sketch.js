@@ -22,10 +22,24 @@ let img;
 // A variable to store canvas
 let canvas;
 
+// Callback
+let modelReady = false;
+
+// GUI elements - declare globally
+let sel;
+let slider;
+let checkbox;
+let button;
+
 function preload() {
   //Models available are: 'MobileNet', 'Darknet' and 'Darknet-tiny','DoodleNet'...
-  classifier = ml5.imageClassifier('MobileNet'); //
+  classifier = ml5.imageClassifier('MobileNet', modelLoaded);
   img = loadImage('images/bird.png');
+}
+
+function modelLoaded() {
+  console.log('Model loaded successfully!');
+  modelReady = true;
 }
 
 function setup() {
@@ -35,7 +49,6 @@ function setup() {
   strokeWeight(f);
 
   // GUI init
-
   sel = createSelect();
   sel.position(10, 10);
   sel.option('MobileNet');
@@ -60,9 +73,6 @@ function setup() {
   button.position(10, 150);
   button.mousePressed(saveImage);
 
-  // let div2 = createDiv("press 's' to export .gif");
-  // div2.position(10, 180);
-
   let div4 = createDiv("Press 's' to save a .gif sequence");
   div4.style('font-size', '10px');
   div4.position(10, 200);
@@ -72,9 +82,6 @@ function draw(){
   noFill(); 
   if(frameCount%14==0){
     background(250);
-
-    // Insert image
-    // image(img, 0, 0, doc, doc);
     
     stroke("#6200ff");
     hatch();
@@ -84,31 +91,40 @@ function draw(){
     circles(200*f);
     circles(200*f);
 
-    classifier.classify(canvas, gotResult);
+    // Only classify if model is ready
+    if (modelReady) {
+      classifier.classify(canvas, gotResult);
+    } else {
+      // Show loading message
+      fill("#6200ff");
+      noStroke();
+      textSize(32);
+      text("Loading model...", 20, doc-20);
+    }
   }
 }
 
 // A function to run when we get any errors and the results
 function gotResult(results) {
+  // ml5.js v1.3.0 passes results directly, not (error, results)
   
-  let offset
+  let offset;
 
   // The results are in an array ordered by confidence.
   console.log(results);
   
   if (checkbox.checked()) {
-    txt = results[0].label+'\n'+results[1].label+'\n'+results[2].label
-    offset = 100
+    txt = results[0].label+'\n'+results[1].label+'\n'+results[2].label;
+    offset = 100;
   } else {
-    txt = results[0].label
-    offset = 20
+    txt = results[0].label;
+    offset = 20;
   }
 
   fill("#6200ff");
   noStroke();
   textSize(32);
-  text(txt,20, doc-offset);
-    
+  text(txt, 20, doc-offset);
 }
 
 // Random drawing functions
@@ -151,8 +167,18 @@ function myCheckedEvent() {
 
 function mySelectEvent() {
   let item = sel.value();
-  classifier = ml5.imageClassifier(item)
-  text(item, 20, 20);
+  console.log('Switching to: ' + item);
+  
+  // Disable classification while loading
+  modelReady = false;
+  
+  // Create new classifier with callback
+  classifier = ml5.imageClassifier(item, function() {
+    modelLoaded();
+    // Force dropdown to stay on selected value
+    sel.selected(item);
+    console.log('Model loaded: ' + item);
+  });
 }
 
 function saveImage() {
